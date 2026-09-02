@@ -6,10 +6,20 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "dev:debug": "nodemon --inspect src/server.js",
     "test": "jest --testEnvironment=node",
     "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --maxWorkers=2",
     "lint": "eslint src/**/*.js",
-    "format": "prettier --write src/**/*.js"
+    "lint:fix": "eslint src/**/*.js --fix",
+    "format": "prettier --write src/**/*.js",
+    "seed": "node src/scripts/seed.js",
+    "seed:prod": "NODE_ENV=production node src/scripts/seed.js",
+    "docker:build": "docker build -t communityconnect-api .",
+    "docker:run": "docker run -p 5000:5000 --env-file .env communityconnect-api",
+    "db:backup": "node src/scripts/backup.js",
+    "db:restore": "node src/scripts/restore.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -26,13 +36,23 @@
   },
   "devDependencies": {
     "jest": "^29.7.0",
+    "mongodb-memory-server": "^9.0.0",
     "nodemon": "^3.0.1",
     "supertest": "^6.3.3"
   },
   "jest": {
     "testEnvironment": "node",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ]
+    "testMatch": ["**/__tests__/**/*.test.js"],
+    "collectCoverageFrom": ["src/**/*.js", "!src/server.js", "!src/scripts/**/*.js"],
+    "coverageThreshold": {
+      "global": {
+        "branches": 70,
+        "functions": 70,
+        "lines": 70,
+        "statements": 70
+      }
+    },
+    "setupFilesAfterEnv": ["<rootDir>/src/__tests__/setup.js"],
+    "testTimeout": 30000
   }
 }
