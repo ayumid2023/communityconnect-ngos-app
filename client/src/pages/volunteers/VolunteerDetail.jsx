@@ -289,4 +289,41 @@ export default function VolunteerDetail() {
                         Due: {new Date(assignment.dueDate).toLocaleDateString()}
                       </span>
                     )}
-                    <span>Status
+                    <span>Status: {assignment.status}</span>
+                    {assignment.hoursCompleted > 0 && (
+                      <span className="text-purple-600">
+                        {assignment.hoursCompleted} hours
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  {assignment.status !== 'completed' && (
+                    <button
+                      onClick={() => {
+                        const hours = prompt('Enter hours completed:');
+                        if (hours) {
+                          handleLogHours(assignment._id, parseFloat(hours));
+                        }
+                      }}
+                      className="text-green-600 hover:text-green-700 text-sm flex items-center"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-1" />
+                      Log Hours
+                    </button>
+                  )}
+                  {assignment.status === 'completed' && (
+                    <span className="text-green-600 text-sm flex items-center">
+                      <CheckCircle className="w-4 h-4 mr-1" />
+                      Completed
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
