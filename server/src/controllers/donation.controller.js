@@ -203,4 +203,21 @@ exports.sendReceipt = async (req, res) => {
   try {
     const donation = await Donation.findOne({
       _id: req.params.id,
-     
+      orgId: req.user.orgId,
+    });
+    
+    if (!donation) {
+      return res.status(404).json({ error: 'Donation not found' });
+    }
+    
+    await sendDonationReceipt(donation);
+    
+    donation.receiptSent = true;
+    await donation.save();
+    
+    res.json({ message: 'Receipt sent successfully' });
+  } catch (error) {
+    logger.error('Send receipt error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
