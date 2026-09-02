@@ -10,21 +10,14 @@ const logger = require('./utils/logger');
 dotenv.config();
 
 // Import routes
-const authRoutes = require('./routes/auth.routes');
-const donorRoutes = require('./routes/donor.routes');
-const donationRoutes = require('./routes/donation.routes');
-const volunteerRoutes = require('./routes/volunteer.routes');
-const campaignRoutes = require('./routes/campaign.routes');
-const paymentRoutes = require('./routes/payment.routes');
-const impactRoutes = require('./routes/impact.routes');
-const feedbackRoutes = require('./routes/feedback.routes');
+const routes = require('./routes');
 
 const app = express();
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: 'Too many requests from this IP, please try again later.',
 });
 
@@ -46,24 +39,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-  });
-});
-
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/donors', donorRoutes);
-app.use('/api/donations', donationRoutes);
-app.use('/api/volunteers', volunteerRoutes);
-app.use('/api/campaigns', campaignRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/impact', impactRoutes);
-app.use('/api/feedback', feedbackRoutes);
+// Mount all routes
+app.use('/api', routes);
 
 // 404 handler
 app.use((req, res) => {
