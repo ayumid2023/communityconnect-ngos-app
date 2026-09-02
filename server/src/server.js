@@ -75,5 +75,15 @@ connectDB().then(() => {
     logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
   });
 });
+// Import health routes
+const healthRoutes = require('./routes/health.routes');
+
+// ... existing code ...
+
+// Mount health routes (before API routes)
+app.use('/health', healthRoutes);
+
+// Mount API routes
+app.use('/api', routes);
 
 module.exports = app;
