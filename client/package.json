@@ -5,10 +5,18 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:widget": "vite build --config vite.widget.config.js",
+    "build:all": "npm run build && npm run build:widget",
     "preview": "vite preview",
     "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives",
-    "format": "prettier --write src"
+    "lint:fix": "eslint src --ext js,jsx --fix",
+    "format": "prettier --write src",
+    "analyze": "vite build --mode analyze",
+    "docker:build": "docker build -t communityconnect-frontend .",
+    "docker:run": "docker run -p 80:80 communityconnect-frontend"
   },
   "dependencies": {
     "@stripe/stripe-js": "^2.4.0",
